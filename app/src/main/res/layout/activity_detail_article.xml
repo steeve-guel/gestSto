@@ -36,7 +36,7 @@
         android:textSize="20sp"
         android:layout_below="@+id/editTextText"/>
 
-    <EditText
+    <TextView
         android:id="@+id/categorie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,6 +44,8 @@
         android:fontFamily="sans-serif-condensed"
         android:textSize="16sp"
         android:layout_below="@id/nom"
+        android:focusable="true"
+        android:clickable="true"
         />
 
     <EditText
@@ -65,5 +67,45 @@
         android:textSize="16sp"
         android:layout_below="@+id/quantite"
         />
+    
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/seuil"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible">
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Produits frais"/>
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Produits laitiers"/>
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Boissons"/>
+
+        <RadioButton
+            android:id="@+id/radio3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fruits"/>
+
+        <RadioButton
+            android:id="@+id/radio4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Légumes"/>
+
+    </RadioGroup>
 
 </RelativeLayout>
