@@ -12,7 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GestSto">
         <activity
-            android:name=".MainActivity"
+            android:name=".DetailArticle"
+            android:exported="false"
+            android:parentActivityName=".ArticlesListe">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ArticlesListe"/>
+        </activity>
+
+        <activity
+            android:name=".ArticlesListe"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

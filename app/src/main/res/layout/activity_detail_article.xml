@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailArticle"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:background="#555555"
+        android:theme="@style/ToolbarTheme.BlocNote"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:title="Article: mode edition"/>
+
+    <TextView
+        android:id="@+id/editTextText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:inputType="text"
+        android:text="Information sur l'article"
+        android:layout_below="@+id/toolbar"/>
+
+    <EditText
+        android:id="@+id/nom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nom de l'article"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_below="@+id/editTextText"/>
+
+    <EditText
+        android:id="@+id/categorie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Oleagineux"
+        android:fontFamily="sans-serif-condensed"
+        android:textSize="16sp"
+        android:layout_below="@id/nom"
+        />
+
+    <EditText
+        android:id="@+id/quantite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="200"
+        android:fontFamily="serif"
+        android:textSize="16sp"
+        android:layout_below="@+id/categorie"
+        />
+
+    <EditText
+        android:id="@+id/seuil"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:fontFamily="serif"
+        android:textSize="16sp"
+        android:layout_below="@+id/quantite"
+        />
+
+</RelativeLayout>
