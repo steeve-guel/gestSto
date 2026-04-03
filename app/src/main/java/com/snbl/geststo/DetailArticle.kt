@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.IntentCompat
@@ -80,7 +81,32 @@ class DetailArticle : AppCompatActivity() {
                 saveArticle()
                 true
             }
+            R.id.action_delete -> {
+                confirmDelete()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun confirmDelete() {
+        AlertDialog.Builder(this)
+            .setTitle("Suppression")
+            .setMessage("Voulez-vous vraiment supprimer cet article ?")
+            .setPositiveButton("Supprimer") { _, _ ->
+                deleteArticle()
+            }
+            .setNegativeButton("Annuler", null)
+            .show()
+    }
+
+    private fun deleteArticle() {
+        article?.let {
+            lifecycleScope.launch {
+                AppDatabase.getDatabase(this@DetailArticle).articleDao().delete(it)
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
     }
 
