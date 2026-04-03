@@ -1,11 +1,13 @@
 package com.snbl.geststo
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -24,6 +26,16 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
     private var articles: List<Article> = listOf()
     private lateinit var adaptar: ArticleAdapter
 
+    // 1. Déclarer le launcher pour intercepter le retour de DetailArticle
+    private val detailArticleLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            // 2. Recharger les articles quand on revient avec un succès
+            loadArticles()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,7 +49,6 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         
-        // Initialiser l'adapter avec une liste vide au début
         adaptar = ArticleAdapter(articles, this)
         recyclerView.adapter = adaptar
 
@@ -79,7 +90,7 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
                     val article = Article(nom = nom, categorie = categorie, quantite = quantite, seuil = seuil)
                     lifecycleScope.launch {
                         AppDatabase.getDatabase(this@ArticlesListe).articleDao().insert(article)
-                        loadArticles() // Recharger la liste
+                        loadArticles()
                     }
                 }
             }
@@ -95,7 +106,8 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(this, DetailArticle::class.java)
             intent.putExtra("article", article)
             intent.putExtra("articleindex", index)
-            startActivity(intent)
+            // 3. Utiliser le launcher au lieu de startActivity
+            detailArticleLauncher.launch(intent)
         } else {
             when(v?.id) {
                 R.id.creat_article_fab -> {
