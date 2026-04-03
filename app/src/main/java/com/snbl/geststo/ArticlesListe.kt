@@ -2,8 +2,11 @@ package com.snbl.geststo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,8 +21,8 @@ import kotlinx.coroutines.launch
 
 class ArticlesListe : AppCompatActivity(), View.OnClickListener {
 
-    lateinit var articles: List<Article>
-    lateinit var adaptar: ArticleAdapter
+    private var articles: List<Article> = listOf()
+    private lateinit var adaptar: ArticleAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,32 +34,58 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             insets
         }
 
-        val db = AppDatabase.getDatabase(this)
-        val articleDao = db.articleDao()
-
         val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        
+        // Initialiser l'adapter avec une liste vide au début
+        adaptar = ArticleAdapter(articles, this)
+        recyclerView.adapter = adaptar
 
         val fab = findViewById<FloatingActionButton>(R.id.creat_article_fab)
         fab.setOnClickListener(this)
 
+        loadArticles()
+    }
+
+    private fun loadArticles() {
         lifecycleScope.launch {
-            articles = articleDao.getAll()
+            val db = AppDatabase.getDatabase(this@ArticlesListe)
+            articles = db.articleDao().getAll()
             adaptar = ArticleAdapter(articles, this@ArticlesListe)
+            val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
             recyclerView.adapter = adaptar
         }
     }
 
-//    fun editArticle(position: Int){
-//        val intent = Intent(this, DetailArticle::class.java)
-//        intent.putExtra("article", articles[position])
-//        intent.putExtra("articleindex", position)
-//        startActivityForResult.lauch(intent, DetailArticle.Re )
-//
-//    }
+    private fun createArticle() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = LayoutInflater.from(this)
+        val dialogView = inflater.inflate(R.layout.dialog_add_article, null)
+        
+        val etNom = dialogView.findViewById<EditText>(R.id.etNom)
+        val etCategorie = dialogView.findViewById<EditText>(R.id.etCategorie)
+        val etQuantite = dialogView.findViewById<EditText>(R.id.etQuantite)
+        val etSeuil = dialogView.findViewById<EditText>(R.id.etSeuil)
 
-    private fun createArticle () {
+        builder.setView(dialogView)
+            .setTitle("Nouvel Article")
+            .setPositiveButton("Enregistrer") { _, _ ->
+                val nom = etNom.text.toString()
+                val categorie = etCategorie.text.toString()
+                val quantite = etQuantite.text.toString().toIntOrNull() ?: 0
+                val seuil = etSeuil.text.toString().toIntOrNull() ?: 0
 
+                if (nom.isNotEmpty()) {
+                    val article = Article(nom = nom, categorie = categorie, quantite = quantite, seuil = seuil)
+                    lifecycleScope.launch {
+                        AppDatabase.getDatabase(this@ArticlesListe).articleDao().insert(article)
+                        loadArticles() // Recharger la liste
+                    }
+                }
+            }
+            .setNegativeButton("Annuler", null)
+            .create()
+            .show()
     }
 
     override fun onClick(v: View?) {
@@ -67,12 +96,11 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             intent.putExtra("article", article)
             intent.putExtra("articleindex", index)
             startActivity(intent)
-        } else{
-            when(v?.id){
+        } else {
+            when(v?.id) {
                 R.id.creat_article_fab -> {
                     createArticle()
                 }
-
             }
         }
     }
