@@ -1,37 +1,35 @@
 package com.snbl.geststo
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.RadioGroup
+import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.IntentCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import data.AppDatabase
 import data.Article
 import data.ArticleAdapter
+import kotlinx.coroutines.launch
 
-class DetailArticle : AppCompatActivity(), View.OnClickListener {
+class DetailArticle : AppCompatActivity() {
 
     private var article: Article? = null
-    lateinit var textViewNom: TextView
+    lateinit var editTextNom: EditText
     lateinit var textViewCategorie: TextView
-    lateinit var textViewQuantite: TextView
-    lateinit var textViewSeuil : TextView
+    lateinit var editTextQuantite: EditText
+    lateinit var editTextSeuil : EditText
     lateinit var rLayout: RelativeLayout
-    lateinit var radioGroup: RadioGroup
 
     var articleIndex = -1
-
-    companion object{
-        var listCategorie = listOf("Produits frais","Produits laitiers","Boissons","Fruits","Légumes")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,23 +48,18 @@ class DetailArticle : AppCompatActivity(), View.OnClickListener {
         article = IntentCompat.getParcelableExtra(intent, "article", Article::class.java)
         articleIndex = intent.getIntExtra("articleindex", -1)
 
-        textViewNom = findViewById(R.id.nom)
+        editTextNom = findViewById(R.id.nom)
         textViewCategorie = findViewById(R.id.categorie)
-        //
-        textViewCategorie.setOnClickListener(this)
-        textViewQuantite = findViewById(R.id.quantite)
-        textViewSeuil = findViewById(R.id.seuil)
-        //
-        radioGroup = findViewById(R.id.radioGroup)
+        editTextQuantite = findViewById(R.id.quantite)
+        editTextSeuil = findViewById(R.id.seuil)
         rLayout = findViewById(R.id.layout)
 
         article?.let {
-            textViewNom.text = it.nom
-            textViewCategorie.text = it.categorie // listcategorie[it.categorie]
-            textViewQuantite.text = it.quantite.toString()
-            textViewSeuil.text = it.seuil.toString()
+            editTextNom.setText(it.nom)
+            textViewCategorie.text = it.categorie
+            editTextQuantite.setText(it.quantite.toString())
+            editTextSeuil.setText(it.seuil.toString())
             
-            // Appliquer la couleur de fond
             val color = ArticleAdapter.color[it.id % ArticleAdapter.color.size]
             rLayout.setBackgroundColor(color)
         }
@@ -78,20 +71,32 @@ class DetailArticle : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        return when(item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
             R.id.action_save -> {
-                Toast.makeText(this,"icone save clicke",Toast.LENGTH_SHORT).show()
-                return true
-            } else -> return super.onOptionsItemSelected(item)
-
+                saveArticle()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
-    override fun onClick(v: View?) {
-        if(v == textViewCategorie){
-            Toast.makeText(this,"icone categorie clicke",Toast.LENGTH_SHORT).show()
-            radioGroup.visibility=View.VISIBLE
+    private fun saveArticle() {
+        val updatedArticle = Article(
+            id = article?.id ?: 0,
+            nom = editTextNom.text.toString(),
+            categorie = textViewCategorie.text.toString(),
+            quantite = editTextQuantite.text.toString().toIntOrNull() ?: 0,
+            seuil = editTextSeuil.text.toString().toIntOrNull() ?: 0
+        )
+
+        lifecycleScope.launch {
+            AppDatabase.getDatabase(this@DetailArticle).articleDao().update(updatedArticle)
+            setResult(Activity.RESULT_OK)
+            finish()
         }
     }
-
 }

@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface ArticleDao {
@@ -15,6 +16,9 @@ interface ArticleDao {
 
     @Insert
     suspend fun insert(article: Article)
+
+    @Update
+    suspend fun update(article: Article)
 
     @Query("DELETE FROM articles WHERE id = :id")
     suspend fun deleteId(id: Int)
