@@ -39,6 +39,13 @@
                 android:layout_below="@+id/nom1"
                 />
             <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantite"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/categorie1"/>
+            <TextView
                 android:id="@+id/quantite1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -46,8 +53,17 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/categorie1"
+                android:layout_below="@+id/text1"
                 />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seuil de stock faible"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/quantite1"/>
+
             <TextView
                 android:id="@+id/seuil1"
                 android:layout_width="wrap_content"
@@ -56,7 +72,7 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/quantite1"
+                android:layout_below="@+id/text2"
                 />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -95,6 +111,15 @@
                 android:text="Oleanigineux"
                 android:layout_below="@+id/nom2"
                 />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantite"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/categorie2"/>
+
             <TextView
                 android:id="@+id/quantite2"
                 android:layout_width="wrap_content"
@@ -103,8 +128,17 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/categorie2"
+                android:layout_below="@+id/text3"
                 />
+
+            <TextView
+                android:id="@+id/text4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seuil de stock faible"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/quantite2"/>
+
             <TextView
                 android:id="@+id/seuil2"
                 android:layout_width="wrap_content"
@@ -113,7 +147,7 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/quantite2"
+                android:layout_below="@+id/text4"
                 />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -153,6 +187,13 @@
                 android:layout_below="@+id/nom3"
                 />
             <TextView
+                android:id="@+id/text5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quantite"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/categorie3"/>
+            <TextView
                 android:id="@+id/quantite3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,8 +201,16 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/categorie3"
+                android:layout_below="@+id/text5"
                 />
+            <TextView
+                android:id="@+id/text6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seuil de stock faible"
+                android:paddingLeft="5dp"
+                android:layout_below="@+id/quantite3"/>
+
             <TextView
                 android:id="@+id/seuil3"
                 android:layout_width="wrap_content"
@@ -170,7 +219,7 @@
                 android:fontFamily="sans-serif-black"
                 android:textSize="12sp"
                 android:text="100"
-                android:layout_below="@+id/quantite3"
+                android:layout_below="@+id/text6"
                 />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

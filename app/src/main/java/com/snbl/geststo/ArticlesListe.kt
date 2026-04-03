@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -26,9 +27,11 @@ import kotlinx.coroutines.launch
 
 class ArticlesListe : AppCompatActivity(), View.OnClickListener {
 
-    private var articles: List<Article> = listOf()
+    private var allArticles: List<Article> = listOf()
+    private var displayedArticles: List<Article> = listOf()
     private lateinit var adaptar: ArticleAdapter
     private var badgeCount: TextView? = null
+    private var isFiltered = false
 
     private val detailArticleLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -55,7 +58,7 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         
-        adaptar = ArticleAdapter(articles, this)
+        adaptar = ArticleAdapter(displayedArticles, this)
         recyclerView.adapter = adaptar
 
         val fab = findViewById<FloatingActionButton>(R.id.creat_article_fab)
@@ -69,23 +72,50 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         val menuItem = menu.findItem(R.id.action_notification)
         val actionView = menuItem.actionView
         badgeCount = actionView?.findViewById(R.id.badge_count)
+        
+        actionView?.setOnClickListener {
+            toggleFilter()
+        }
+        
         updateBadge()
         return true
+    }
+
+    private fun toggleFilter() {
+        isFiltered = !isFiltered
+        if (isFiltered) {
+            supportActionBar?.title = "Alertes Stock"
+            Toast.makeText(this, "Affichage des stocks faibles", Toast.LENGTH_SHORT).show()
+        } else {
+            supportActionBar?.title = "Gsto"
+            Toast.makeText(this, "Affichage de tous les articles", Toast.LENGTH_SHORT).show()
+        }
+        updateDisplayedList()
     }
 
     private fun loadArticles() {
         lifecycleScope.launch {
             val db = AppDatabase.getDatabase(this@ArticlesListe)
-            articles = db.articleDao().getAll()
-            adaptar = ArticleAdapter(articles, this@ArticlesListe)
-            val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
-            recyclerView.adapter = adaptar
+            allArticles = db.articleDao().getAll()
             updateBadge()
+            updateDisplayedList()
         }
     }
 
+    private fun updateDisplayedList() {
+        displayedArticles = if (isFiltered) {
+            allArticles.filter { it.quantite <= it.seuil }
+        } else {
+            allArticles
+        }
+        
+        adaptar = ArticleAdapter(displayedArticles, this@ArticlesListe)
+        val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
+        recyclerView.adapter = adaptar
+    }
+
     private fun updateBadge() {
-        val count = articles.count { it.quantite <= it.seuil }
+        val count = allArticles.count { it.quantite <= it.seuil }
         badgeCount?.let {
             if (count > 0) {
                 it.text = count.toString()
@@ -130,7 +160,7 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v?.tag != null) {
             val index = v.tag as Int
-            val article = articles[index]
+            val article = displayedArticles[index]
             val intent = Intent(this, DetailArticle::class.java)
             intent.putExtra("article", article)
             intent.putExtra("articleindex", index)
