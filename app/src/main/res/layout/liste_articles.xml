@@ -13,8 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:background="#555555"
-        android:theme="@style/ToolbarTheme.BlocNote"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:title="Gsto"/>
 
     <TextView
@@ -23,84 +22,28 @@
         android:layout_height="wrap_content"
         android:text="Liste des articles"
         android:textSize="20sp"
-        android:layout_marginTop="15sp"
-        android:layout_marginBottom="20sp"
-        android:layout_below="@+id/toolbar"
-/>
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/toolbar" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" tools:ignore="ExtraText"
         android:id="@+id/liste_notes_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/textView"
-        >
-        tools:listitem="@layout/item_view"
-    </androidx.recyclerview.widget.RecyclerView>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_view" />
 
-    <!--    <EditText-->
-    <!--        android:id="@+id/etNom"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="Nom de l'article"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--    <EditText-->
-    <!--        android:id="@+id/etCategorie"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="Catégorie"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etNom" />-->
-
-    <!--    <EditText-->
-    <!--        android:id="@+id/etQuantite"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="Quantité"-->
-    <!--        android:inputType="number"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etCategorie" />-->
-
-    <!--    <EditText-->
-    <!--        android:id="@+id/etSeuil"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:hint="Seuil d'alerte"-->
-    <!--        android:inputType="number"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etQuantite" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/btnInsert"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginTop="8dp"-->
-    <!--        android:text="Insérer"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etSeuil" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/btnList"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginTop="8dp"-->
-    <!--        android:text="Lister"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/etSeuil" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/tvResult"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        android:layout_marginTop="16dp"-->
-    <!--        android:scrollbars="vertical"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/btnInsert" />-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/creat_article_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/add"
+        android:clickable="true"
+        android:focusable="true"
+        app:tint="@android:color/white" />
 
 </RelativeLayout>

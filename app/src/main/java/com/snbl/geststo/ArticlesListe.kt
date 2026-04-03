@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import data.AppDatabase
 import data.Article
 import data.ArticleAdapter
@@ -36,11 +37,26 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val fab = findViewById<FloatingActionButton>(R.id.creat_article_fab)
+        fab.setOnClickListener(this)
+
         lifecycleScope.launch {
             articles = articleDao.getAll()
             adaptar = ArticleAdapter(articles, this@ArticlesListe)
             recyclerView.adapter = adaptar
         }
+    }
+
+//    fun editArticle(position: Int){
+//        val intent = Intent(this, DetailArticle::class.java)
+//        intent.putExtra("article", articles[position])
+//        intent.putExtra("articleindex", position)
+//        startActivityForResult.lauch(intent, DetailArticle.Re )
+//
+//    }
+
+    private fun createArticle () {
+
     }
 
     override fun onClick(v: View?) {
@@ -51,6 +67,13 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             intent.putExtra("article", article)
             intent.putExtra("articleindex", index)
             startActivity(intent)
+        } else{
+            when(v?.id){
+                R.id.creat_article_fab -> {
+                    createArticle()
+                }
+
+            }
         }
     }
 }
