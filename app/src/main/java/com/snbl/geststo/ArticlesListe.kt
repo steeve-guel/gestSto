@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -25,13 +28,12 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
 
     private var articles: List<Article> = listOf()
     private lateinit var adaptar: ArticleAdapter
+    private var badgeCount: TextView? = null
 
-    // 1. Déclarer le launcher pour intercepter le retour de DetailArticle
     private val detailArticleLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            // 2. Recharger les articles quand on revient avec un succès
             loadArticles()
         }
     }
@@ -40,6 +42,10 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.liste_articles)
+        
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -58,6 +64,15 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
         loadArticles()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        val menuItem = menu.findItem(R.id.action_notification)
+        val actionView = menuItem.actionView
+        badgeCount = actionView?.findViewById(R.id.badge_count)
+        updateBadge()
+        return true
+    }
+
     private fun loadArticles() {
         lifecycleScope.launch {
             val db = AppDatabase.getDatabase(this@ArticlesListe)
@@ -65,6 +80,19 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             adaptar = ArticleAdapter(articles, this@ArticlesListe)
             val recyclerView = findViewById<RecyclerView>(R.id.liste_notes_recycler_view)
             recyclerView.adapter = adaptar
+            updateBadge()
+        }
+    }
+
+    private fun updateBadge() {
+        val count = articles.count { it.quantite <= it.seuil }
+        badgeCount?.let {
+            if (count > 0) {
+                it.text = count.toString()
+                it.visibility = View.VISIBLE
+            } else {
+                it.visibility = View.GONE
+            }
         }
     }
 
@@ -106,7 +134,6 @@ class ArticlesListe : AppCompatActivity(), View.OnClickListener {
             val intent = Intent(this, DetailArticle::class.java)
             intent.putExtra("article", article)
             intent.putExtra("articleindex", index)
-            // 3. Utiliser le launcher au lieu de startActivity
             detailArticleLauncher.launch(intent)
         } else {
             when(v?.id) {
